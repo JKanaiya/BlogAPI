@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import "dotenv/config.js";
 import { body, validationResult } from "express-validator";
 import prisma from "./prismaController.js";
 import passport from "passport";
@@ -48,16 +47,10 @@ passport.use(
       const match = await bcrypt.compare(jwt_payload.password, user.password);
 
       if (!match) {
-        return done(null, user, { message: "Incorrect password" });
+        return done(null, false, { message: "Incorrect password" });
       }
 
-      res.locals.user = {
-        id: user.id,
-        email: user.email,
-        role: user.Role,
-      };
-
-      return done(null, user, { message: "Incorrect password" });
+      return done(null, user);
     } catch (err) {
       return done(null, false, { message: "Error in authorizing user" });
     }
@@ -81,15 +74,18 @@ const logIn = [
       password: req.body.password,
     };
     jwt.sign(payload, process.env.SECRET, (err, token) =>
-      err ? res.json({ error: err }) : res.json({ token }),
+      err
+        ? res.json({ error: err })
+        : res.json({ token, email: req.body.email }),
     );
   },
 ];
 
 const signUp = [
-  validateUserForm,
+  // validateUserForm,
   async (req, res) => {
     try {
+      console.log(req.body);
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
       const errors = validationResult(req);

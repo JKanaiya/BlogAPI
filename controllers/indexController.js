@@ -2,20 +2,38 @@ import passport from "passport";
 import prisma from "./prismaController.js";
 
 const getPosts = async (req, res) => {
-  const posts = await prisma.post.findMany();
+  const posts = await prisma.post.findMany({
+    include: {
+      Comment: true,
+    },
+  });
   res.json(posts);
 };
 
-const createComment = async (req, res) => {
-  const commentCreated = await prisma.comment.create({
-    data: {
-      text: req.body.text,
-      userId: res.locals.userId,
-      postId: req.body.postId,
-    },
-  });
-  res.json(commentCreated);
-};
+const createComment = [
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    if (req.body.parentComment) {
+      const commentCreated = await prisma.comment.create({
+        data: {
+          text: req.body.text,
+          userId: req.body.userId,
+          postId: req.body.postId,
+        },
+      });
+      res.json(commentCreated);
+    } else {
+      const commentCreated = await prisma.comment.create({
+        data: {
+          text: req.body.text,
+          userId: req.body.userId,
+          postId: req.body.postId,
+        },
+      });
+      res.json(commentCreated);
+    }
+  },
+];
 
 const confirmCommentAuthor = async (req, res, next) => {
   const comment = await prisma.comment.findFirst({
@@ -81,7 +99,6 @@ const createPost = [
 const updatePost = [
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    const now = new Date();
     const postUpdated = await prisma.post.update({
       where: {
         id: req.body.postId,
@@ -89,7 +106,7 @@ const updatePost = [
       data: {
         text: req.body.text,
         published: req.body.published,
-        edited: now.toISOString(),
+        edited: new Date().toISOString(),
       },
     });
     res.json(postUpdated);

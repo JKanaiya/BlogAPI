@@ -9,11 +9,11 @@ import {
   getPosts,
 } from "../controllers/indexController.js";
 
-import { logIn, signUp, logOut } from "../controllers/Auths.js";
+import { logIn, signUp, logOut } from "../controllers/auths.js";
 
 const indexRouter = express.Router();
 
-indexRouter.get("/", getPosts);
+indexRouter.get("/posts", getPosts);
 indexRouter.get("/log-out", logOut);
 // TODO: Add Auth middleware to:
 // Post Comment
