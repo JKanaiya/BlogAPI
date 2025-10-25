@@ -20,8 +20,8 @@ indexRouter.get("/log-out", logOut);
 indexRouter.post("/log-in", logIn);
 indexRouter.post("/sign-up", signUp);
 // by returning true on successful comment add, grant react the ability to add the comment to the post?
-indexRouter.post("/comment", createComment);
-indexRouter.post("/post", createPost);
+indexRouter.put("/comment", createComment);
+indexRouter.put("/post", createPost);
 indexRouter.patch("/comment", updateComment);
 indexRouter.patch("/post", updatePost);
 indexRouter.delete("/comment", deleteComment);

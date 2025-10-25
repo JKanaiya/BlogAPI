@@ -13,25 +13,20 @@ const getPosts = async (req, res) => {
 const createComment = [
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    if (req.body.parentComment) {
-      const commentCreated = await prisma.comment.create({
-        data: {
-          text: req.body.text,
-          userId: req.body.userId,
-          postId: req.body.postId,
-        },
-      });
-      res.json(commentCreated);
-    } else {
-      const commentCreated = await prisma.comment.create({
-        data: {
-          text: req.body.text,
-          userId: req.body.userId,
-          postId: req.body.postId,
-        },
-      });
-      res.json(commentCreated);
-    }
+    const user = await prisma.user.findFirst({
+      where: {
+        email: req.body.email,
+      },
+    });
+    const commentCreated = await prisma.comment.create({
+      data: {
+        text: req.body.comment,
+        userId: user.id,
+        postId: req.body.postId,
+        parentCommentId: req.body.parentCommentId,
+      },
+    });
+    res.json(commentCreated);
   },
 ];
 
