@@ -19,7 +19,7 @@ const validateUserForm = [
     .custom((val, { req }) => {
       return val === req.body.password;
     })
-    .withMessage("Passwords do not match"),
+    .withMessage("Passwords do not match!"),
 ];
 
 // TODO: Add the form validation for the posts
@@ -82,7 +82,7 @@ const logIn = [
 ];
 
 const signUp = [
-  // validateUserForm,
+  validateUserForm,
   async (req, res) => {
     try {
       console.log(req.body);

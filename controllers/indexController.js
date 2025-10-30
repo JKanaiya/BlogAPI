@@ -4,7 +4,29 @@ import prisma from "./prismaController.js";
 const getPosts = async (req, res) => {
   const posts = await prisma.post.findMany({
     include: {
-      Comment: true,
+      Comment: {
+        include: {
+          subComments: {
+            include: {
+              User: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+          User: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
+      writer: {
+        select: {
+          email: true,
+        },
+      },
     },
   });
   res.json(posts);
@@ -23,7 +45,7 @@ const createComment = [
         text: req.body.comment,
         userId: user.id,
         postId: req.body.postId,
-        parentCommentId: req.body.parentCommentId,
+        parentCommentId: req.body.commentId,
       },
     });
     res.json(commentCreated);
