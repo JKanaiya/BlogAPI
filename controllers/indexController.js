@@ -43,32 +43,41 @@ const createComment = [
     const commentCreated = await prisma.comment.create({
       data: {
         text: req.body.comment,
-        userId: user.id,
-        postId: req.body.postId,
+        edited: null,
+        Post: {
+          connect: {
+            id: req.body.postId,
+          },
+        },
         parentCommentId: req.body.commentId,
+        User: {
+          connect: {
+            id: user.id,
+          },
+        },
       },
     });
     res.json(commentCreated);
   },
 ];
 
-const confirmCommentAuthor = async (req, res, next) => {
-  const comment = await prisma.comment.findFirst({
-    where: {
-      commentId: req.commentId,
-    },
-  });
-
-  if (comment.userId === res.locals.user.id) {
-    return next();
-  } else {
-    res.status(400).json("Comment author does not match the user");
-  }
-};
+// const confirmCommentAuthor = async (req, res, next) => {
+//   const comment = await prisma.comment.findFirst({
+//     where: {
+//       commentId: req.commentId,
+//     },
+//   });
+//
+//   if (comment.userId === res.locals.user.id) {
+//     return next();
+//   } else {
+//     res.status(400).json("Comment author does not match the user");
+//   }
+// };
 
 const updateComment = [
   passport.authenticate("jwt", { session: false }),
-  confirmCommentAuthor,
+  // confirmCommentAuthor,
   async (req, res) => {
     const commentUpdated = await prisma.comment.update({
       where: {
@@ -76,6 +85,7 @@ const updateComment = [
       },
       data: {
         text: req.body.text,
+        edited: true,
       },
     });
     res.json(commentUpdated);
@@ -84,11 +94,16 @@ const updateComment = [
 
 const deleteComment = [
   passport.authenticate("jwt", { session: false }),
-  confirmCommentAuthor,
+  // confirmCommentAuthor,
   async (req, res) => {
-    const postComment = await prisma.comment.delete({
+    console.log(req.body);
+    const postComment = await prisma.comment.update({
       where: {
         id: req.body.commentId,
+      },
+      data: {
+        text: "Comment has been deleted.",
+        edited: new Date().toISOString(),
       },
     });
     res.json(postComment);

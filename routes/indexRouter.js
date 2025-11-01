@@ -24,7 +24,7 @@ indexRouter.put("/comment", createComment);
 indexRouter.put("/post", createPost);
 indexRouter.patch("/comment", updateComment);
 indexRouter.patch("/post", updatePost);
-indexRouter.delete("/comment", deleteComment);
+indexRouter.post("/comment", deleteComment);
 indexRouter.delete("/post", deletePost);
 
 export default indexRouter;
