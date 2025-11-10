@@ -44,17 +44,19 @@ const createComment = [
       data: {
         text: req.body.comment,
         edited: null,
-        Post: {
-          connect: {
-            id: req.body.postId,
-          },
-        },
+        postId: req.body.postId,
+        userId: user.id,
+        // Post: {
+        //   connect: {
+        //     id: req.body.postId,
+        //   },
+        // },
         parentCommentId: req.body.commentId,
-        User: {
-          connect: {
-            id: user.id,
-          },
-        },
+        // User: {
+        //   connect: {
+        //     id: user.id,
+        //   },
+        // },
       },
     });
     res.json(commentCreated);
@@ -81,11 +83,11 @@ const updateComment = [
   async (req, res) => {
     const commentUpdated = await prisma.comment.update({
       where: {
-        id: req.body.commentId,
+        id: Number(req.body.commentId),
       },
       data: {
         text: req.body.text,
-        edited: true,
+        edited: new Date().toISOString(),
       },
     });
     res.json(commentUpdated);
@@ -113,15 +115,19 @@ const deleteComment = [
 const createPost = [
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: req.body.email,
+      },
+    });
     const now = new Date();
     const postCreated = await prisma.post.create({
       data: {
         text: req.body.text,
         published: req.body.published,
+        title: req.body.title,
         created: now.toISOString(),
         userId: req.body.userId,
-        title: req.body.title,
-        writer: res.locals.user,
       },
     });
     res.json(postCreated);

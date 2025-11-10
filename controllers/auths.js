@@ -109,7 +109,6 @@ const signUp = [
             password: hashedPassword,
           },
         });
-        // TODO: can login be called here to reduce bad ux?
         return res.status(200).json("Registration Successful");
       } else {
         return res
