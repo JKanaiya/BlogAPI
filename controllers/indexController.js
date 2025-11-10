@@ -127,7 +127,7 @@ const createPost = [
         published: req.body.published,
         title: req.body.title,
         created: now.toISOString(),
-        userId: req.body.userId,
+        userId: user.id,
       },
     });
     res.json(postCreated);
