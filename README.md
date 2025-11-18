@@ -55,7 +55,7 @@ npm run dev
 ### DELETE
 |  Endpoint      |     Purpose   |
 | ------------- | ------------- |
-|   `/post` | *attempts to delete a comment *|
+|   `/post` | *attempts to delete a comment*|
 
 
 --------
@@ -64,7 +64,6 @@ Features
 - User authentication with JWT
 - Error handling and validation
 - Blog post management with create/update functionality
-- 
 - Comments    
     - Nested Comments
     - Editing Comments
