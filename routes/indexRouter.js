@@ -15,16 +15,13 @@ const indexRouter = express.Router();
 
 indexRouter.get("/posts", getPosts);
 indexRouter.get("/log-out", logOut);
-// TODO: Add Auth middleware to:
-// Post Comment
 indexRouter.post("/log-in", logIn);
 indexRouter.post("/sign-up", signUp);
-// by returning true on successful comment add, grant react the ability to add the comment to the post?
 indexRouter.post("/comment", createComment);
+indexRouter.post("/delete-comment", deleteComment);
+indexRouter.post("/update-post", updatePost);
 indexRouter.post("/post", createPost);
 indexRouter.patch("/comment", updateComment);
-indexRouter.post("/update-post", updatePost);
-indexRouter.post("/delete-comment", deleteComment);
 indexRouter.delete("/post", deletePost);
 
 export default indexRouter;
