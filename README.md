@@ -59,7 +59,7 @@ npm run dev
 
 
 --------
-Features
+## Features
 
 - User authentication with JWT
 - Error handling and validation
